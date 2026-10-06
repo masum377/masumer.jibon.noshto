@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <title>MASUM Fly Ball 🎮</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            overflow: hidden;
+
+            font-family: Arial, sans-serif;
+
+            background: #111;
+
+            user-select: none;
+
+            -webkit-user-select: none;
+
+            touch-action: manipulation;
+
+        }
+
+
+        /* =========================
+           GAME
+        ========================= */
+
+        #game {
+
+            width: 100vw;
+
+            height: 100vh;
+
+            position: relative;
+
+            overflow: hidden;
+
+            background:
+
+                linear-gradient(
+                    to bottom,
+                    #5ed7ff 0%,
+                    #b9f2ff 62%,
+                    #8bd46b 62%,
+                    #4caf50 100%
+                );
+
+        }
+
+
+        /* =========================
+           SUN
+        ========================= */
+
+        .sun {
+
+            position: absolute;
+
+            top: 45px;
+
+            right: 50px;
+
+            width: 80px;
+
+            height: 80px;
+
+            border-radius: 50%;
+
+            background: #ffd83d;
+
+            box-shadow:
+                0 0 35px #fff176;
+
+        }
+
+
+        /* =========================
+           CLOUD
+        ========================= */
+
+        .cloud {
+
+            position: absolute;
+
+            width: 130px;
+
+            height: 45px;
+
+            background: white;
+
+            border-radius: 50px;
+
+            opacity: .85;
+
+        }
+
+
+        .cloud::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 55px;
+
+            height: 55px;
+
+            left: 20px;
+
+            top: -25px;
+
+            background: white;
+
+            border-radius: 50%;
+
+        }
+
+
+        .cloud::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 65px;
+
+            height: 65px;
+
+            right: 15px;
+
+            top: -30px;
+
+            background: white;
+
+            border-radius: 50%;
+
+        }
+
+
+        .cloud1 {
+
+            top: 100px;
+
+            left: 8%;
+
+        }
+
+
+        .cloud2 {
+
+            top: 230px;
+
+            left: 62%;
+
+            transform: scale(.8);
+
+        }
+
+
+        /* =========================
+           SCORE
+        ========================= */
+
+        #score {
+
+            position: absolute;
+
+            top: 20px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            color: white;
+
+            font-size: 45px;
+
+            font-weight: bold;
+
+            text-shadow:
+                3px 3px 5px #333;
+
+            z-index: 50;
+
+        }
+
+
+        /* =========================
+           BALL
+        ========================= */
+
+        #ball {
+
+            position: absolute;
+
+            width: 42px;
+
+            height: 42px;
+
+            left: 20%;
+
+            top: 50%;
+
+            border-radius: 50%;
+
+            background:
+
+                radial-gradient(
+                    circle at 30% 25%,
+                    white,
+                    #ffe600 25%,
+                    #ff9800 70%
+                );
+
+            box-shadow:
+                0 5px 10px rgba(0,0,0,.3);
+
+            z-index: 20;
+
+            will-change: transform;
+
+        }
+
+
+        /* BALL EYE */
+
+        #ball::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 8px;
+
+            height: 8px;
+
+            right: 9px;
+
+            top: 10px;
+
+            background: #222;
+
+            border-radius: 50%;
+
+        }
+
+
+        /* =========================
+           PIPES
+        ========================= */
+
+        .pipe {
+
+            position: absolute;
+
+            width: 70px;
+
+            background:
+
+                linear-gradient(
+                    to right,
+                    #137b38,
+                    #28c85d,
+                    #137b38
+                );
+
+            border: 3px solid #11652f;
+
+            z-index: 10;
+
+        }
+
+
+        .pipe-top {
+
+            top: 0;
+
+        }
+
+
+        .pipe-bottom {
+
+            bottom: 0;
+
+        }
+
+
+        .pipe-head {
+
+            position: absolute;
+
+            left: -8px;
+
+            width: 82px;
+
+            height: 28px;
+
+            background:
+
+                linear-gradient(
+                    to right,
+                    #137b38,
+                    #28c85d,
+                    #137b38
+                );
+
+            border: 3px solid #11652f;
+
+            border-radius: 5px;
+
+        }
+
+
+        .pipe-top .pipe-head {
+
+            bottom: -2px;
+
+        }
+
+
+        .pipe-bottom .pipe-head {
+
+            top: -2px;
+
+        }
+
+
+        /* =========================
+           GROUND
+        ========================= */
+
+        #ground {
+
+            position: absolute;
+
+            left: 0;
+
+            bottom: 0;
+
+            width: 100%;
+
+            height: 35px;
+
+            background:
+
+                repeating-linear-gradient(
+                    45deg,
+                    #388e3c 0px,
+                    #388e3c 15px,
+                    #43a047 15px,
+                    #43a047 30px
+                );
+
+            border-top: 5px solid #2e7d32;
+
+            z-index: 30;
+
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        #message {
+
+            position: absolute;
+
+            width: 90%;
+
+            max-width: 500px;
+
+            left: 50%;
+
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            padding: 35px 25px;
+
+            background: rgba(0,0,0,.80);
+
+            color: white;
+
+            text-align: center;
+
+            border-radius: 25px;
+
+            z-index: 100;
+
+            box-shadow:
+                0 10px 40px rgba(0,0,0,.5);
+
+        }
+
+
+        #message h1 {
+
+            font-size: 30px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        #message p {
+
+            font-size: 19px;
+
+            margin: 10px 0;
+
+        }
+
+
+        #message button {
+
+            margin-top: 20px;
+
+            padding: 14px 30px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background: #ff1744;
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        #message button:active {
+
+            transform: scale(.95);
+
+        }
+
+
+        /* =========================
+           INSTRUCTION
+        ========================= */
+
+        #instruction {
+
+            position: absolute;
+
+            left: 50%;
+
+            bottom: 48px;
+
+            transform: translateX(-50%);
+
+            color: white;
+
+            font-size: 15px;
+
+            text-shadow:
+                2px 2px 4px #333;
+
+            z-index: 40;
+
+            white-space: nowrap;
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media(max-width:600px) {
+
+            #score {
+
+                font-size: 38px;
+
+            }
+
+
+            #ball {
+
+                width: 38px;
+
+                height: 38px;
+
+            }
+
+
+            .pipe {
+
+                width: 60px;
+
+            }
+
+
+            .pipe-head {
+
+                width: 72px;
+
+            }
+
+
+            #message h1 {
+
+                font-size: 25px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div id="game">
+
+
+        <div class="sun"></div>
+
+
+        <div class="cloud cloud1"></div>
+
+        <div class="cloud cloud2"></div>
+
+
+        <div id="score">
+            0
+        </div>
+
+
+        <div id="ball"></div>
+
+
+        <div id="instruction">
+            👆 Tap / Click / Space
+        </div>
+
+
+        <div id="ground"></div>
+
+
+        <div id="message">
+
+            <h1>
+                🎮 MASUM FLY BALL
+            </h1>
+
+            <p>
+                Pipe-এর মাঝ দিয়ে Ball পার করুন!
+            </p>
+
+            <p>
+                👆 একবার Tap করুন
+            </p>
+
+            <button onclick="startGame()">
+                🚀 START GAME
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+
+        /* =========================
+           ELEMENTS
+        ========================= */
+
+        const game =
+            document.getElementById("game");
+
+        const ball =
+            document.getElementById("ball");
+
+        const scoreText =
+            document.getElementById("score");
+
+        const message =
+            document.getElementById("message");
+
+
+        /* =========================
+           GAME VARIABLES
+        ========================= */
+
+        let ballX = 20;
+
+        let ballY = 50;
+
+        let velocity = 0;
+
+
+        /*
+            Gravity
+
+            ছোট gravity দিয়ে শুরু হবে
+            পরে ধীরে ধীরে বাড়বে
+        */
+
+        let gravity = 0.32;
+
+        let jumpPower = -6.5;
+
+
+        let gameRunning = false;
+
+        let score = 0;
+
+        let pipes = [];
+
+        let pipeTimer = 0;
+
+        let lastTime = 0;
+
+
+        /*
+            Game speed
+
+            শুরুতে slow
+            পরে ধীরে ধীরে fast
+        */
+
+        let pipeSpeed = 2.5;
+
+
+        /* =========================
+           START GAME
+        ========================= */
+
+        function startGame() {
+
+
+            /* OLD PIPES REMOVE */
+
+            pipes.forEach(pipe => {
+
+                pipe.top.remove();
+
+                pipe.bottom.remove();
+
+            });
+
+
+            pipes = [];
+
+
+            /* RESET BALL */
+
+            ballY = 50;
+
+            velocity = 0;
+
+
+            /* RESET SCORE */
+
+            score = 0;
+
+            scoreText.innerText = score;
+
+
+            /* RESET TIMER */
+
+            pipeTimer = 0;
+
+
+            /* RESET SPEED */
+
+            pipeSpeed = 2.5;
+
+
+            /* RESET GRAVITY */
+
+            gravity = 0.32;
+
+
+            ball.style.top =
+                ballY + "%";
+
+
+            /* HIDE MESSAGE */
+
+            message.style.display = "none";
+
+
+            gameRunning = true;
+
+
+            lastTime =
+                performance.now();
+
+
+            requestAnimationFrame(gameLoop);
+
+        }
+
+
+        /* =========================
+           JUMP
+        ========================= */
+
+        function fly() {
+
+
+            if (!gameRunning) {
+
+                return;
+
+            }
+
+
+            /*
+                IMPORTANT:
+
+                Tap করলে শুধু একবার velocity
+                সেট হবে।
+
+                Tap ধরে রাখলেও আবার আবার
+                jump হবে না।
+            */
+
+            velocity = jumpPower;
+
+        }
+
+
+        /* =========================
+           MOBILE TAP
+        ========================= */
+
+        game.addEventListener(
+            "pointerdown",
+            function(event) {
+
+                /*
+                    button-এর ওপর tap করলে
+                    game jump করবে না
+                */
+
+                if (
+                    event.target.tagName ===
+                    "BUTTON"
+                ) {
+
+                    return;
+
+                }
+
+
+                fly();
+
+            }
+        );
+
+
+        /* =========================
+           KEYBOARD
+        ========================= */
+
+        document.addEventListener(
+            "keydown",
+            function(event) {
+
+
+                if (
+                    event.code === "Space" ||
+                    event.code === "ArrowUp"
+                ) {
+
+                    event.preventDefault();
+
+
+                    /*
+                        Key ধরে রাখলেও
+                        browser repeat বন্ধ
+                    */
+
+                    if (!event.repeat) {
+
+                        fly();
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           CREATE PIPE
+        ========================= */
+
+        function createPipe() {
+
+
+            const gameHeight =
+                game.clientHeight;
+
+
+            /*
+                Pipe gap
+
+                Mobile-এ একটু বড় gap
+            */
+
+            const gap =
+                window.innerWidth < 600
+                    ? 185
+                    : 175;
+
+
+            const minHeight = 70;
+
+
+            const maxHeight =
+                gameHeight -
+                gap -
+                120;
+
+
+            const topHeight =
+                Math.random() *
+                (maxHeight - minHeight)
+                + minHeight;
+
+
+            const bottomHeight =
+                gameHeight -
+                topHeight -
+                gap -
+                35;
+
+
+            /* TOP PIPE */
+
+            const topPipe =
+                document.createElement("div");
+
+
+            topPipe.className =
+                "pipe pipe-top";
+
+
+            topPipe.style.height =
+                topHeight + "px";
+
+
+            topPipe.style.left =
+                game.clientWidth + "px";
+
+
+            const topHead =
+                document.createElement("div");
+
+
+            topHead.className =
+                "pipe-head";
+
+
+            topPipe.appendChild(topHead);
+
+
+            /* BOTTOM PIPE */
+
+            const bottomPipe =
+                document.createElement("div");
+
+
+            bottomPipe.className =
+                "pipe pipe-bottom";
+
+
+            bottomPipe.style.height =
+                bottomHeight + "px";
+
+
+            bottomPipe.style.left =
+                game.clientWidth + "px";
+
+
+            const bottomHead =
+                document.createElement("div");
+
+
+            bottomHead.className =
+                "pipe-head";
+
+
+            bottomPipe.appendChild(
+                bottomHead
+            );
+
+
+            game.appendChild(topPipe);
+
+            game.appendChild(bottomPipe);
+
+
+            pipes.push({
+
+                top: topPipe,
+
+                bottom: bottomPipe,
+
+                x: game.clientWidth,
+
+                passed: false
+
+            });
+
+        }
+
+
+        /* =========================
+           COLLISION
+        ========================= */
+
+        function collision(
+            rect1,
+            rect2
+        ) {
+
+            return !(
+                rect1.right <
+                rect2.left ||
+
+                rect1.left >
+                rect2.right ||
+
+                rect1.bottom <
+                rect2.top ||
+
+                rect1.top >
+                rect2.bottom
+            );
+
+        }
+
+
+        /* =========================
+           GAME LOOP
+        ========================= */
+
+        function gameLoop(time) {
+
+
+            if (!gameRunning) {
+
+                return;
+
+            }
+
+
+            const delta =
+                Math.min(
+                    (time - lastTime) /
+                    16.67,
+                    2
+                );
+
+
+            lastTime = time;
+
+
+            /* =====================
+               GRAVITY
+               ===================== */
+
+
+            /*
+                Gravity gradually বাড়বে।
+
+                তাই:
+
+                প্রথমে → slow
+
+                পরে → fast fall
+            */
+
+            gravity +=
+                0.0015 * delta;
+
+
+            if (gravity > 0.65) {
+
+                gravity = 0.65;
+
+            }
+
+
+            velocity +=
+                gravity * delta;
+
+
+            ballY +=
+                velocity * delta;
+
+
+            ball.style.top =
+                ballY + "%";
+
+
+            /* =====================
+               GAME SPEED
+               ===================== */
+
+
+            /*
+                Game শুরুতে slow।
+
+                Score বাড়লে speed বাড়বে।
+            */
+
+            pipeSpeed =
+                2.5 +
+                Math.min(score * 0.08, 2.2);
+
+
+            /* =====================
+               PIPE TIMER
+               ===================== */
+
+            pipeTimer += delta;
+
+
+            /*
+                শুরুতে pipe একটু দূরে।
+
+                পরে দ্রুত আসবে।
+            */
+
+            const pipeInterval =
+                Math.max(
+                    85,
+                    110 - score * 0.5
+                );
+
+
+            if (
+                pipeTimer >
+                pipeInterval
+            ) {
+
+                createPipe();
+
+                pipeTimer = 0;
+
+            }
+
+
+            /* =====================
+               MOVE PIPES
+               ===================== */
+
+            pipes.forEach(
+                pipe => {
+
+
+                    pipe.x -=
+                        pipeSpeed * delta;
+
+
+                    pipe.top.style.left =
+                        pipe.x + "px";
+
+
+                    pipe.bottom.style.left =
+                        pipe.x + "px";
+
+
+                    /* SCORE */
+
+                    if (
+                        !pipe.passed &&
+
+                        pipe.x + 70 <
+                        game.clientWidth *
+                        0.20
+                    ) {
+
+
+                        pipe.passed = true;
+
+
+                        score++;
+
+
+                        scoreText.innerText =
+                            score;
+
+                    }
+
+                }
+            );
+
+
+            /* =====================
+               REMOVE OLD PIPES
+               ===================== */
+
+            pipes =
+                pipes.filter(
+                    pipe => {
+
+
+                        if (
+                            pipe.x < -100
+                        ) {
+
+
+                            pipe.top.remove();
+
+                            pipe.bottom.remove();
+
+
+                            return false;
+
+                        }
+
+
+                        return true;
+
+                    }
+                );
+
+
+            /* =====================
+               BALL RECT
+               ===================== */
+
+            const ballRect =
+                ball.getBoundingClientRect();
+
+
+            /* =====================
+               GROUND / SKY
+               ===================== */
+
+            if (
+                ballY < -4 ||
+                ballY > 88
+            ) {
+
+                gameOver();
+
+                return;
+
+            }
+
+
+            /* =====================
+               PIPE COLLISION
+               ===================== */
+
+            for (
+                let pipe of pipes
+            ) {
+
+
+                const topRect =
+                    pipe.top
+                        .getBoundingClientRect();
+
+
+                const bottomRect =
+                    pipe.bottom
+                        .getBoundingClientRect();
+
+
+                if (
+                    collision(
+                        ballRect,
+                        topRect
+                    ) ||
+
+                    collision(
+                        ballRect,
+                        bottomRect
+                    )
+                ) {
+
+
+                    gameOver();
+
+                    return;
+
+                }
+
+            }
+
+
+            requestAnimationFrame(
+                gameLoop
+            );
+
+        }
+
+
+        /* =========================
+           GAME OVER
+        ========================= */
+
+        function gameOver() {
+
+
+            gameRunning = false;
+
+
+            message.style.display =
+                "block";
+
+
+            message.innerHTML = `
+
+                <h1>
+                    💀 মাসুমের জীবনে নষ্ট
+                </h1>
+
+                <p>
+                    Ball গেল, জীবন গেল! 😂
+                </p>
+
+                <p>
+                    🏆 Score: ${score}
+                </p>
+
+                <button onclick="startGame()">
+                    🔄 আবার খেলি 🎮
+                </button>
+
+            `;
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
